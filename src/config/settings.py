@@ -14,6 +14,16 @@ class Settings(BaseSettings):
     # grok
     GROK_API_KEY: str
 
+    # open weather map
+    OPENWEATHERMAP_API_KEY: str
+
+    # ask news
+    ASKNEWS_CLIENT_ID: str
+    ASKNEWS_CLIENT_SECRET: str
+
+    # news api
+    NEWS_API_KEY: str
+
     # langsmith
     LANGSMITH_TRACING: bool
     LANGSMITH_API_KEY: str
