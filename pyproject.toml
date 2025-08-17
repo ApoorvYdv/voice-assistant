@@ -10,6 +10,7 @@ dependencies = [
     "langchain-community>=0.3.27",
     "langchain-openai>=0.3.28",
     "langgraph>=0.6.2",
+    "langgraph-cli[inmem]>=0.3.6",
     "langgraph-supervisor>=0.0.29",
     "newsapi-python>=0.2.7",
     "pydantic>=2.11.7",

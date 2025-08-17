@@ -1,3 +1,5 @@
+import uuid
+
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 from langgraph_supervisor import create_supervisor
@@ -11,6 +13,7 @@ from src.utils.pretty_print_messages import pretty_print_messages
 
 class SupervisorWorkflow:
     def __init__(self):
+        self.thread_id = str(uuid.uuid4())
         self.llm = ChatOpenAI(
             api_key=settings.OPENROUTER_API_KEY,
             model="deepseek/deepseek-chat-v3-0324:free",
@@ -91,6 +94,9 @@ class SupervisorWorkflow:
         ).compile()
         return supervisor
 
+    def get_config(self):
+        return {"configurable": {"user_id": "Jarvis", "thread_id": self.thread_id}}
+
     def run(self):
         for chunk in self.supervisor().stream(
             {
@@ -100,8 +106,10 @@ class SupervisorWorkflow:
                         "content": "russia ukraine war?",
                     }
                 ]
-            }
+            },
+            # stream_mode="values",
+            config=self.get_config(),
         ):
             pretty_print_messages(chunk, last_message=True)
 
-        final_message_history = chunk["supervisor"]["messages"]
+        # final_message_history = chunk["supervisor"]["messages"]

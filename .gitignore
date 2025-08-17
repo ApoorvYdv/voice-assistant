@@ -173,3 +173,7 @@ storage/
 # Settings
 .secrets.toml
 .vscode/settings.json
+
+
+# langgraph
+.langgraph_api/

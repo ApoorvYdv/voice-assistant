@@ -22,8 +22,8 @@ class NewsService:
             description = article.get("description") or ""
             # Limit description to 500 words
             words = description.split()
-            if len(words) > 500:
-                description = " ".join(words[:500])
+            if len(words) > 100:
+                description = " ".join(words[:100])
             news.append(
                 {
                     "source": article.get("source"),

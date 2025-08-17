@@ -1,4 +1,4 @@
-from src.core.workflows.superviosr_agent import SupervisorWorkflow
+from src.core.workflows.supervisor_agent import SupervisorWorkflow
 
 
 def main():
