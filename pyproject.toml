@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "elevenlabs>=2.11.0",
     "firecrawl-py>=2.16.3",
     "langchain>=0.3.27",
     "langchain-community>=0.3.27",
@@ -13,9 +14,12 @@ dependencies = [
     "langgraph-cli[inmem]>=0.3.6",
     "langgraph-supervisor>=0.0.29",
     "newsapi-python>=0.2.7",
+    "numpy>=2.3.2",
     "pydantic>=2.11.7",
     "pyowm>=3.3.0",
     "python-dotenv>=1.1.1",
     "requests>=2.32.4",
+    "scipy>=1.16.1",
     "setuptools>=80.9.0",
+    "sounddevice>=0.5.2",
 ]

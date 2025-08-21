@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     LANGSMITH_ENDPOINT: str
     LANGSMITH_PROJECT: str
 
+    # Eleven labs
+    ELEVENLABS_API_KEY: str
+
     class Config:
         env_file = ".env"
 
