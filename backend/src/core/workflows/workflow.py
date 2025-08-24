@@ -5,7 +5,7 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph
 
 from src.config.settings import settings
-from src.core.nodes.firecrawl import FirecrawlService
+from src.core.tools.firecrawl import FirecrawlService
 from src.core.prompts.prompts import DeveloperToolsPrompts
 from src.core.schemas.schemas import CompanyAnalysis, CompanyInfo, ResearchState
 

@@ -5,9 +5,9 @@ from langgraph.prebuilt import create_react_agent
 from langgraph_supervisor import create_supervisor
 
 from src.config.settings import settings
-from src.core.nodes.calculator import CalculatorService
-from src.core.nodes.news import NewsService
-from src.core.nodes.weather import WeatherService
+from src.core.tools.calculator import CalculatorService
+from src.core.tools.news import NewsService
+from src.core.tools.weather import WeatherService
 from src.utils.pretty_print_messages import pretty_print_messages
 
 
