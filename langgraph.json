@@ -1,8 +1,0 @@
-{
-    "dependencies": ["."],
-    "graphs": {
-        "supervisor": "./supervisor.py:graph",
-        "voice-assistant": "./voice-assistant.py:graph"
-    },
-    "env": ".env"
-}
