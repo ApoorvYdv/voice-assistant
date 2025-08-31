@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
-
-import { CopilotKit } from "@copilotkit/react-core";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { CopilotKit } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/styles.css";
-import { Inter } from "next/font/google";
-import { CopilotPopup } from "@copilotkit/react-ui";
+import { CopilotSidebar } from "@copilotkit/react-ui";
 
-const inter = Inter({ subsets: ['latin'] })
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,11 +27,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="voice-assistant">
-          {children}
-          <CopilotPopup instructions="This is a demo and not connected to the voice assistant."
-            defaultOpen={false} labels={{ title: "Jarvis", initial: "This is a separate text-based assistant" }} />
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <CopilotKit
+          runtimeUrl="/api/copilotkit"
+          agent="voice-assistant"
+          textToSpeechUrl="http://localhost:8000/tts" // Use proxy endpoint
+          transcribeAudioUrl="http://localhost:8000/stt"
+        >
+          <CopilotSidebar
+            defaultOpen={true}
+            instructions={
+              "You are assisting the user as best as you can. Answer in the best way possible given the data you have."
+            }
+            labels={{
+              title: "Sidebar Assistant",
+              initial: "How can I help you today?",
+            }}
+          >
+            {children}
+          </CopilotSidebar>
         </CopilotKit>
       </body>
     </html>
