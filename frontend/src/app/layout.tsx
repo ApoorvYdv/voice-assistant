@@ -3,6 +3,10 @@ import type { Metadata } from "next";
 import { CopilotKit } from "@copilotkit/react-core";
 import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
+import { Inter } from "next/font/google";
+import { CopilotPopup } from "@copilotkit/react-ui";
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,9 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={"antialiased"}>
+      <body className={inter.className}>
         <CopilotKit runtimeUrl="/api/copilotkit" agent="voice-assistant">
           {children}
+          <CopilotPopup instructions="This is a demo and not connected to the voice assistant."
+            defaultOpen={false} labels={{ title: "Jarvis", initial: "This is a separate text-based assistant" }} />
         </CopilotKit>
       </body>
     </html>
