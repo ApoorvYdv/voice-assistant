@@ -1,5 +1,4 @@
 from langchain_community.utilities import OpenWeatherMapAPIWrapper
-
 from src.config.settings import settings
 
 

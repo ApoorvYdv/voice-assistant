@@ -3,13 +3,12 @@ import uuid
 import numpy as np
 import sounddevice as sd
 import whisper
-from elevenlabs import VoiceSettings, play
+from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, MessagesState, StateGraph
 from scipy.io.wavfile import write
-
 from src.config.settings import settings
 from src.core.workflows.supervisor_agent import SupervisorWorkflow
 
@@ -95,18 +94,17 @@ class VoiceAssistantWorkflow:
             ),
         )
 
-        # Play the audio back
-        play(response)
+        # store the raw audio stream in the state to return
+        state["audio_stream"] = list(response)
+        return state
 
     def _build_workflow(self):
         graph = StateGraph(MessagesState)
 
-        graph.add_node("audio_input", self._record_audio)
         graph.add_node("supervisor", self._call_supervisor)
         graph.add_node("audio_output", self._play_audio)
 
-        graph.add_edge(START, "audio_input")
-        graph.add_edge("audio_input", "supervisor")
+        graph.add_edge(START, "supervisor")
         graph.add_edge("supervisor", "audio_output")
         graph.add_edge("audio_output", END)
 

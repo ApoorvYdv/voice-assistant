@@ -7,3 +7,6 @@ __pycache__/
 # python
 .venv/
 .langgraph_api/
+
+# audio file
+*.wav

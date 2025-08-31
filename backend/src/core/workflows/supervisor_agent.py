@@ -3,7 +3,6 @@ import uuid
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
 from langgraph_supervisor import create_supervisor
-
 from src.config.settings import settings
 from src.core.tools.calculator import CalculatorService
 from src.core.tools.news import NewsService
@@ -15,7 +14,7 @@ class SupervisorWorkflow:
     def __init__(self):
         self.thread_id = str(uuid.uuid4())
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash", api_key=settings.GEMINI_API_KEY
+            model="gemini-2.5-pro", api_key=settings.GEMINI_API_KEY
         )
 
     def get_news_agent(self):
