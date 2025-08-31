@@ -1,3 +1,3 @@
-from src.core.workflows.supervisor_agent import SupervisorWorkflow
+from backend.src.core.workflows.supervisor import SupervisorWorkflow
 
 graph = SupervisorWorkflow().supervisor()

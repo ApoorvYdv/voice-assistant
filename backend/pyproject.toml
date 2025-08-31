@@ -5,10 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "copilotkit>=0.1.49",
+    "copilotkit==0.1.62",
     "elevenlabs>=2.11.0",
     "firecrawl-py>=2.16.3",
-    "langchain>=0.3.27",
+    "langchain==0.3.26",
     "langchain-community>=0.3.27",
     "langchain-google-genai>=2.1.9",
     "langchain-openai>=0.3.28",

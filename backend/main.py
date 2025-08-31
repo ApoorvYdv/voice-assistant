@@ -1,17 +1,13 @@
-import io
-
 import uvicorn
+from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
-from langchain_core.messages import HumanMessage
-from pydantic import BaseModel
-from src.core.workflows.voice_assistant import VoiceAssistantWorkflow
+from src.utils.copilotkit.copilotkit import copilotkit_remote_endpoint
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(title="FastAPI voice assistant server")
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,27 +17,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+add_fastapi_endpoint(
+    app,
+    copilotkit_remote_endpoint,
+    "/copilotkit_remote",
+    max_workers=10,
+)
 
-class TextInput(BaseModel):
-    message: str
 
-
-@app.post("/invoke-assistant")
-async def invoke_assistant(input_data: TextInput):
-    print(input_data.message)
-
-    final_state = (
-        VoiceAssistantWorkflow()
-        ._build_workflow()
-        .invoke({"messages": [HumanMessage(content=input_data.message)]})
-    )
-    print(final_state)
-
-    audio_bytes_list = final_state["audio_stream"]
-    audio_bytes = b"".join(audio_bytes_list)
-
-    return StreamingResponse(io.BytesIO(audio_bytes), media_type="audio/mpeg")
+def main():
+    """Run the uvicorn server"""
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8000)
+    main()

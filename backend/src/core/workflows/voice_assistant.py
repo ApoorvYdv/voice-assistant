@@ -6,11 +6,23 @@ import whisper
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from langchain_core.messages import HumanMessage
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import END, START, MessagesState, StateGraph
 from scipy.io.wavfile import write
 from src.config.settings import settings
-from src.core.workflows.supervisor_agent import SupervisorWorkflow
+from backend.src.core.workflows.supervisor import SupervisorWorkflow
+
+
+class VoiceAssistantState(MessagesState):
+    """
+    Represents the state of our voice assistant graph.
+
+    Attributes:
+        messages: The list of messages exchanged in the conversation.
+        audio_stream: A list of audio bytes for the TTS response.
+    """
+
+    audio_stream_iterator: object
 
 
 class VoiceAssistantWorkflow:
@@ -20,22 +32,22 @@ class VoiceAssistantWorkflow:
             "configurable": {"user_id": "Jarvis", "thread_id": self.thread_id}
         }
 
-        self.llm = ChatOpenAI(
-            api_key=settings.OPENROUTER_API_KEY,
-            model="deepseek/deepseek-chat-v3-0324:free",
-            base_url=settings.OPENROUTER_BASE_URL,
+        self.llm = ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash", api_key=settings.GEMINI_API_KEY
         )
         self.elevenlabs_client = ElevenLabs(api_key=settings.ELEVENLABS_API_KEY)
         self.supervisor = SupervisorWorkflow().supervisor()
 
-    def _call_supervisor(self, state: MessagesState):
+    def _call_supervisor(self, state: VoiceAssistantState):
         """Invokes the compiled supervisor graph with the current state."""
         print("\nCalling Supervisor...")
         response = self.supervisor.invoke(state, config=self.config)
         print("Supervisor finished.")
-        return {"messages": response["messages"]}
+        # Merge supervisor's messages into the existing state
+        state["messages"] = response["messages"]
+        return state
 
-    def _record_audio(self, state: MessagesState):
+    def _record_audio(self, state: VoiceAssistantState):
         """Records audio from the microphone until Enter is pressed, then saves it to a .wav file."""
         # Recording Settings
         fs = 44100  # Sample rate
@@ -70,7 +82,7 @@ class VoiceAssistantWorkflow:
         # Write to messages
         return {"messages": [HumanMessage(content=transcription["text"])]}
 
-    def _play_audio(self, state: MessagesState):
+    def _play_audio(self, state: VoiceAssistantState):
         """Plays the audio response from the remote graph with ElevenLabs."""
 
         # Response from the agent
@@ -81,7 +93,7 @@ class VoiceAssistantWorkflow:
         cleaned_text = response.content.replace("**", "")
 
         # Call text_to_speech API with turbo model for low latency
-        response = self.elevenlabs_client.text_to_speech.convert(
+        audio_iterator = self.elevenlabs_client.text_to_speech.convert(
             voice_id="pNInz6obpgDQGcFmaJgB",  # Adam pre-made voice
             output_format="mp3_22050_32",
             text=cleaned_text,
@@ -95,11 +107,10 @@ class VoiceAssistantWorkflow:
         )
 
         # store the raw audio stream in the state to return
-        state["audio_stream"] = list(response)
-        return state
+        return {"audio_stream_iterator": audio_iterator}
 
     def _build_workflow(self):
-        graph = StateGraph(MessagesState)
+        graph = StateGraph(VoiceAssistantState)
 
         graph.add_node("supervisor", self._call_supervisor)
         graph.add_node("audio_output", self._play_audio)
