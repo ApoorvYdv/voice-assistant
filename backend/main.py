@@ -3,6 +3,7 @@ from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.routers.voice_assistant import voice_assistant
 from src.utils.copilotkit.copilotkit import copilotkit_remote_endpoint
 
 load_dotenv()
@@ -23,6 +24,7 @@ add_fastapi_endpoint(
     "/copilotkit_remote",
     max_workers=10,
 )
+app.include_router(voice_assistant)
 
 
 def main():

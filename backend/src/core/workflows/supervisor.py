@@ -88,7 +88,7 @@ class SupervisorWorkflow:
                 "Do not do any work yourself."
             ),
             add_handoff_back_messages=True,
-            output_mode="full_history",
+            # output_mode="full_history",
         ).compile(checkpointer=MemorySaver())
         return supervisor
 

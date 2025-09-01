@@ -33,8 +33,8 @@ export default function RootLayout({
         <CopilotKit
           runtimeUrl="/api/copilotkit"
           agent="voice-assistant"
-          textToSpeechUrl="http://localhost:8000/tts" // Use proxy endpoint
-          transcribeAudioUrl="http://localhost:8000/stt"
+          textToSpeechUrl="http://localhost:8000/v1/voice-assistant/text-to-speech" // Use proxy endpoint
+          transcribeAudioUrl="http://localhost:8000/v1/voice-assistant/speech-to-text"
         >
           <CopilotSidebar
             defaultOpen={true}
