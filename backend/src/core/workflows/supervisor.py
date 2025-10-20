@@ -1,5 +1,6 @@
 import uuid
 
+from copilotkit.langgraph import copilotkit_customize_config
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -85,7 +86,8 @@ class SupervisorWorkflow:
                 "- a math agent. Assign math-related tasks to this agent\n"
                 "- a news agent. Assign news-related tasks to this agent\n"
                 "Assign work to one agent at a time, do not call agents in parallel.\n"
-                "Do not do any work yourself."
+                "Do not do any work yourself.\n"
+                "Once the response comes summarize it the response"
             ),
             add_handoff_back_messages=True,
             # output_mode="full_history",
@@ -93,7 +95,10 @@ class SupervisorWorkflow:
         return supervisor
 
     def get_config(self):
-        return {"configurable": {"user_id": "Jarvis", "thread_id": self.thread_id}}
+        return copilotkit_customize_config(
+            {"configurable": {"user_id": "Jarvis", "thread_id": self.thread_id}},
+            emit_tool_calls=False,
+        )
 
     def run(self):
         for chunk in self.supervisor().stream(
